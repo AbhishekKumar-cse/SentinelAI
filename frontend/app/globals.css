@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-primary: #030712;
+  --color-bg-secondary: #0f172a;
+  --color-bg-tertiary: #1e293b;
+  --color-border: rgba(30, 41, 59, 0.5);
+  --color-accent: #8b5cf6;
+  --color-accent-glow: rgba(139, 92, 246, 0.15);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-[#030712] text-white;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-600;
+  }
+}
+
+@layer components {
+  /* Glassmorphism card */
+  .glass-card {
+    @apply bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-2xl;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400;
+  }
+
+  /* Agent status pulse */
+  .agent-busy {
+    @apply bg-emerald-400;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Audit chain link */
+  .audit-chain-link::before {
+    content: '';
+    @apply absolute left-2.5 top-4 bottom-0 w-px bg-slate-700;
+  }
+}
+
+@layer utilities {
+  /* Custom animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 5px rgba(139, 92, 246, 0.2); }
+  to { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -400% 0; }
+  100% { background-position: 400% 0; }
+}
+
+/* Recharts custom styling */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  @apply bg-slate-900 border border-slate-700 rounded-xl;
+}
+
+/* ReactFlow styling */
+.react-flow__background {
+  @apply bg-[#030712];
+}
+
+.react-flow__node {
+  @apply rounded-xl;
+}
+
+/* Selection highlight */
+::selection {
+  @apply bg-violet-500/30;
+}
