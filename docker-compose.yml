@@ -140,10 +140,10 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+       test: ["CMD", "curl", "-f", "http://localhost:6333"]
+       interval: 30s
+       timeout: 10s
+       retries: 5
     networks:
       - ag_network
 
