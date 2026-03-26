@@ -1,5 +1,3 @@
-version: "3.9"
-
 # ============================================================
 # AntiGravity v2.0 — Development Docker Compose
 # Starts: MongoDB replica set, Redis, Kafka, Qdrant, Temporal
@@ -60,14 +58,34 @@ services:
         condition: service_healthy
     command: >
       mongosh --host mongo1:27017 --eval "
-        rs.initiate({
-          _id: 'rs0',
-          members: [
-            {_id: 0, host: 'mongo1:27017', priority: 2},
-            {_id: 1, host: 'mongo2:27017', priority: 1},
-            {_id: 2, host: 'mongo3:27017', priority: 1}
-          ]
-        })
+        try {
+          if (!rs.status().ok || rs.status().code === 94) {
+            rs.initiate({
+              _id: 'rs0',
+              members: [
+                {_id: 0, host: 'mongo1:27017', priority: 2},
+                {_id: 1, host: 'mongo2:27017', priority: 1},
+                {_id: 2, host: 'mongo3:27017', priority: 1}
+              ]
+            });
+            console.log('Replica set initialized');
+          } else {
+            console.log('Replica set already initialized');
+          }
+        } catch (e) {
+          if (e.message.includes('already initialized')) {
+            console.log('Replica set already initialized');
+          } else {
+            rs.initiate({
+              _id: 'rs0',
+              members: [
+                {_id: 0, host: 'mongo1:27017', priority: 2},
+                {_id: 1, host: 'mongo2:27017', priority: 1},
+                {_id: 2, host: 'mongo3:27017', priority: 1}
+              ]
+            });
+          }
+        }
       "
     networks:
       - ag_network
@@ -139,11 +157,6 @@ services:
       - "6334:6334"
     volumes:
       - qdrant_data:/qdrant/storage
-    healthcheck:
-       test: ["CMD", "curl", "-f", "http://localhost:6333"]
-       interval: 30s
-       timeout: 10s
-       retries: 5
     networks:
       - ag_network
 
@@ -156,12 +169,11 @@ services:
     ports:
       - "7233:7233"
     environment:
-      - DB=postgresql
-      - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=temporal-postgresql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: temporal
+      POSTGRES_SEEDS: temporal-postgresql
     networks:
       - ag_network
 
@@ -184,8 +196,8 @@ services:
     ports:
       - "8088:8080"
     environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:3000
     networks:
       - ag_network
 
@@ -203,7 +215,7 @@ services:
       kafka:
         condition: service_healthy
       qdrant:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8000:8000"
     environment:

@@ -69,7 +69,21 @@ async def run_worker():
     from db.mongodb import init_mongodb
     await init_mongodb()
 
-    client = await Client.connect(TEMPORAL_HOST, namespace=TEMPORAL_NAMESPACE)
+    # Connect to Temporal with retries
+    client = None
+    retries = 10
+    for i in range(retries):
+        try:
+            logger.info(f"Connecting to Temporal at {TEMPORAL_HOST} (attempt {i+1}/{retries})...")
+            client = await Client.connect(TEMPORAL_HOST, namespace=TEMPORAL_NAMESPACE)
+            logger.info("Successfully connected to Temporal")
+            break
+        except Exception as e:
+            if i == retries - 1:
+                logger.error(f"Failed to connect to Temporal after {retries} attempts: {e}")
+                raise
+            logger.warning(f"Temporal not ready, retrying in 5s... ({e})")
+            await asyncio.sleep(5)
 
     # All activities across all workflow types
     all_activities = [

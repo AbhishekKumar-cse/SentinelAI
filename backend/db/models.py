@@ -649,8 +649,8 @@ class VerificationRecord(Document):
     class Settings:
         name = "verificationRecords"
         indexes = [
-            IndexModel([(("workflow_id", ASCENDING), ("created_at", DESCENDING))]),
-            IndexModel([(("agent_id", ASCENDING), ("created_at", DESCENDING))]),
+            IndexModel([("workflow_id", ASCENDING), ("created_at", DESCENDING)]),
+            IndexModel([("agent_id", ASCENDING), ("created_at", DESCENDING)]),
         ]
 
 

@@ -22,7 +22,7 @@ async def seed():
         Tenant, User, ProcessTemplate, WorkflowRun, WorkflowTask,
         AgentInstance, AuditRecord, DecisionRecord, HumanTask,
         Escalation, Meeting, ActionItem, Connector,
-        SLAConfig, ProcessTemplateDAGNode, DAGNode, DAGEdge, DAGDefinition,
+        SLAConfig, DAGNode, DAGEdge, DAGDefinition,
         SLAConfigEmbedded, PerformanceMetrics,
         WorkflowStatus, TaskStatus, AgentStatus, AgentFamily, HumanTaskStatus, Priority,
         EscalationStatus, ActorType, ConnectorStatus, UserRole,

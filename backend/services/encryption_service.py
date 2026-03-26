@@ -21,7 +21,11 @@ _PBKDF2_ITERATIONS = 100_000
 
 def _derive_key(master_key_hex: str) -> bytes:
     """Derive a 32-byte AES key from the master key hex string using PBKDF2."""
-    master_key_bytes = bytes.fromhex(master_key_hex)
+    try:
+        master_key_bytes = bytes.fromhex(master_key_hex)
+    except ValueError:
+        # Fallback to UTF-8 encoding if not valid hex
+        master_key_bytes = master_key_hex.encode("utf-8")
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,

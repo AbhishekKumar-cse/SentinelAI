@@ -3,3 +3,19 @@ frontend/.next/
 node_modules/
 .next/
 .env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Env
+.env
+
+# Node
+node_modules/
+.next/
+
+# Misc
+.DS_Store
